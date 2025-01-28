@@ -1,0 +1,58 @@
+
+name: React App CI/CD with Cypress and Launchable
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Install Cypress
+      - name: Install Cypress
+        run: npm install cypress --save-dev
+
+      # Step 5: Install Launchable CLI
+      - name: Install Launchable CLI
+        run: npm install -g @launchableinc/cli
+
+      # Step 6: Record Build in Launchable
+      - name: Record Build
+        run: launchable record build --name ${{ github.sha }}
+
+      # Step 7: Optimize Cypress Tests with Launchable
+      - name: Optimize Tests with Launchable
+        run: |
+          launchable subset --target 50% --base-path ./cypress/e2e > subset.txt
+          npx cypress run --spec $(cat subset.txt)
+
+      # Step 8: Record Test Results in Launchable
+      - name: Record Test Results
+        run: launchable record tests cypress --base-path ./cypress/e2e --session $(cat .launchable_session)
+
+      # Step 9: Deploy (Optional)
+      - name: Deploy React App (Optional)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build
