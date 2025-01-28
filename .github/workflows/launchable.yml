@@ -34,7 +34,7 @@ jobs:
 
       # Step 5: Install Launchable CLI
       - name: Install Launchable CLI
-        run: npm install -g @launchableinc/cli
+        run: npm install -g git+https://github.com/launchableinc/launchable-cli.git
 
       # Step 6: Record Build in Launchable
       - name: Record Build
