@@ -33,7 +33,9 @@ jobs:
       # Step 4: Install Cypress
       - name: Install Cypress
         run: npm install cypress --save-dev
-
+        
+      - name: Clear npm cache
+        run: npm cache clean --force
       # Step 5: Install Launchable CLI
       - name: Install Launchable CLI
         run: npm install -g git+https://github.com/launchableinc/launchable-cli.git
