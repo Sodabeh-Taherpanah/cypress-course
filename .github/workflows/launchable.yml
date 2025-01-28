@@ -1,4 +1,3 @@
-
 name: React App CI/CD with Cypress and Launchable
 
 on:
@@ -14,47 +13,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - name: Install Git
-        run: sudo apt-get install git
-      # Step 2: Set up Node.js
+      # Step 2: Set up Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      # Step 3: Install dependencies
+      # Step 3: Install dependencies (including Cypress)
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Install Cypress
-      - name: Install Cypress
-        run: npm install cypress --save-dev
-        
-      - name: Clear npm cache
-        run: npm cache clean --force
-      # Step 5: Install Launchable CLI
-      - name: Install Launchable CLI
-        run: npm install -g git+https://github.com/launchableinc/launchable-cli.git
+      # Step 4: Set up Python for Launchable integration
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
-      # Step 6: Record Build in Launchable
+      # Step 5: Install Launchable Python package
+      - name: Install Launchable Python package
+        run: |
+          pip install --upgrade pip
+          pip install --user --upgrade launchable
+
+      # Step 6: Run Cypress tests
+      - name: Run Cypress tests
+        run: npm run test
+
+      # Step 7: Analyze tests with Launchable for Test Impact Analysis
+      - name: Analyze tests with Launchable (Python package)
+        run: |
+          launchable analyze --tests tests/cypress/**/*.spec.js --type=cypress
+
+      # Step 8: Record Build in Launchable
       - name: Record Build
         run: launchable record build --name ${{ github.sha }}
 
-      # Step 7: Optimize Cypress Tests with Launchable
+      # Step 9: Optimize tests with Launchable
       - name: Optimize Tests with Launchable
         run: |
           launchable subset --target 50% --base-path ./cypress/e2e > subset.txt
           npx cypress run --spec $(cat subset.txt)
 
-      # Step 8: Record Test Results in Launchable
+      # Step 10: Record Test Results in Launchable
       - name: Record Test Results
         run: launchable record tests cypress --base-path ./cypress/e2e --session $(cat .launchable_session)
 
-      # Step 9: Deploy (Optional)
+      # Step 11: Deploy React App (Optional)
       - name: Deploy React App (Optional)
         uses: peaceiris/actions-gh-pages@v3
         with:
