@@ -17,7 +17,9 @@ jobs:
       # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
-
+        
+      - name: Install Git
+        run: sudo apt-get install git
       # Step 2: Set up Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
