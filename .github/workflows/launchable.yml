@@ -12,6 +12,11 @@ jobs:
   cypress-tests:
     runs-on: ubuntu-latest
 
+    env:
+      LAUNCHABLE_TOKEN: ${{ secrets.LAUNCHABLE_TOKEN }}
+      LAUNCHABLE_ORGANIZATION: ${{ secrets.LAUNCHABLE_ORGANIZATION }}
+      LAUNCHABLE_WORKSPACE: ${{ secrets.LAUNCHABLE_WORKSPACE }}
+      
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
