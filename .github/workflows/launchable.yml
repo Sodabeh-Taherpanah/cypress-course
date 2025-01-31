@@ -26,6 +26,13 @@ jobs:
       # Step 3: Install dependencies (including Cypress)
       - name: Install dependencies
         run: npm install
+         # Step 4: Start React app in the background
+      - name: Start React App
+        run: npm start &
+        
+      # Step 5: Wait for React App to be ready
+      - name: Wait for React App
+        run: npx wait-on http://localhost:300
 
       # Step 4: Set up Python for Launchable integration
       - name: Set up Python
