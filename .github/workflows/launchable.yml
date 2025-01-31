@@ -27,8 +27,11 @@ jobs:
       - name: Install dependencies
         run: npm install
          # Step 4: Start React app in the background
-      - name: Start React App
-        run: npm start &
+      - name: Build Next.js
+        run: npm run build
+
+      - name: Start Next.js Server
+        run: npm run start &
         
       # Step 5: Wait for React App to be ready
       - name: Wait for React App
