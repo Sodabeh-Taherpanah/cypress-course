@@ -39,9 +39,14 @@ jobs:
           pip install --upgrade pip
           pip install --user --upgrade launchable
 
-      # Step 6: Run Cypress tests
+      # Step 6: Verify Cypress installation
+      - name: Verify Cypress Installation
+        run: npx cypress verify
+
+      # Step 7: Run Cypress tests (without relying on package.json script)
       - name: Run Cypress tests
-        run: npm run test
+        run: npx cypress run
+
 
       # Step 7: Analyze tests with Launchable for Test Impact Analysis
       - name: Analyze tests with Launchable (Python package)
