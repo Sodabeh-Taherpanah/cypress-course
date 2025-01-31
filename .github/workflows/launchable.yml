@@ -51,11 +51,10 @@ jobs:
 
       # Step 6: Verify Cypress installation
       - name: Verify Cypress Installation
-        run: npx cypress verify
+        run:  npx cypress verify
 
-      # Step 7: Run Cypress tests (without relying on package.json script)
       - name: Run Cypress tests
-         run: npx cypress run --spec 'tests/cypress/e2e/launchTest.cy.jsx'
+        run: npx cypress run --spec 'cypress/e2e/launchTest.cy.jsx'
 
 
       # Step 7: Analyze tests with Launchable for Test Impact Analysis
